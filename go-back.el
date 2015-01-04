@@ -170,11 +170,13 @@
   (interactive)
   (let ((len-hist (length go-back-hist))
         (len-future (length go-back-future)))
-      (message "[%s%s%s]"
-           (make-string (max 0 (- len-hist 1)) ?.)
-           (if (> len-hist 0) "*" "")
-           (make-string len-future ?.))))
-
+    (message "%s%s%s%s%s"
+             (propertize "[" 'face '(:foreground "yellow"))
+             (propertize (make-string (max 0 (- len-hist 1)) ?•) 'face '(:foreground "white"))
+             (propertize (if (> len-hist 0) "✱" "")  'face '(:foreground "red"))
+             (propertize (make-string len-future ?•) 'face '(:foreground "white"))
+             (propertize "]" 'face '(:foreground "yellow"))
+             )))
 
 (provide 'go-back)
 ;;; go-back.el ends here
