@@ -101,6 +101,18 @@
         (setq go-back-future (list))))))  ; Add new one
 
 
+(defun go-back--clean-hist ()
+  "Remove killed buffers from the history and future."
+  (setq go-back-hist
+        (cl-loop for event in go-back-hist
+                 if (buffer-live-p (car event))
+                 collect event))
+  (setq go-back-future
+        (cl-loop for event in go-back-future
+                 if (buffer-live-p (car event))
+                 collect event)))
+
+
 (defun go-back-setup ()
   "Setup the go-back module."
   (interactive)
@@ -122,6 +134,7 @@
 (defun go-back-go-backward ()
   "Move back in history."
   (interactive)
+  (go-back--clean-hist)   ; Clean-up the history first
   (let* ((last-event (pop go-back-hist))
          (last-buf (car last-event))
          (last-point (cdr last-event)))
@@ -151,6 +164,7 @@
 (defun go-back-go-forward ()
   "Move forward in history."
   (interactive)
+  (go-back--clean-hist)   ; Clean-up the history first
   (when (car go-back-future)  ; If future holds something for us
     (let ((future-event (pop go-back-future)))
       (setq go-back-hist (cons future-event go-back-hist)))
