@@ -39,8 +39,15 @@
   :group 'go-back)
 
 
-(defcustom go-back-min-distance 100
+(defcustom go-back-min-distance 1000
   "Minimum distance between point that will be registered as a new event in the history."
+  :type 'integer
+  :group 'go-back
+  )
+
+
+(defcustom go-back-hist-length 30
+  "Maximum length of the history."
   :type 'integer
   :group 'go-back
   )
@@ -84,6 +91,7 @@
 
 (defun go-back--add-to-hist (buf point)
   "Add the BUF and POINT to the stack."
+  (go-back--clean-hist)   ; Clean-up the history first
   (let* ((last-event (pop go-back-hist))
          (last-buf (car last-event))
          (last-point (cdr last-event)))
@@ -105,6 +113,8 @@
   "Remove killed buffers from the history and future."
   (setq go-back-hist
         (cl-loop for event in go-back-hist
+                 with n = 0 do (setq n (1+ n))
+                 while (<= n go-back-hist-length)
                  if (buffer-live-p (car event))
                  collect event))
   (setq go-back-future
