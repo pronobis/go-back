@@ -89,6 +89,12 @@
     (go-back--add-to-hist (current-buffer) p)))
 
 
+(defadvice switch-to-buffer (after go-back--advice-switch-to-buffer (buffer-or-name &optional norecord force-same-window) activate)
+  "Advice capturing switching to a new buffer."
+  (when (go-back--check-buffer (current-buffer))
+    (go-back--add-to-hist (current-buffer) (point))))
+
+
 (defun go-back--add-to-hist (buf point)
   "Add the BUF and POINT to the stack."
   (go-back--clean-hist)   ; Clean-up the history first
@@ -137,7 +143,9 @@
   (let* ((last-event (car go-back-hist))
          (last-buf (car last-event))
          (last-point (cdr last-event)))
+    (ad-deactivate 'switch-to-buffer)
     (switch-to-buffer last-buf)
+    (ad-activate 'switch-to-buffer)
     (goto-char last-point)))
 
 
