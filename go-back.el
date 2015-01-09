@@ -122,11 +122,19 @@
                  with n = 0 do (setq n (1+ n))
                  while (<= n go-back-hist-length)
                  if (buffer-live-p (car event))
-                 collect event))
+                 ;; Reduce the position to the size of the buffer
+                 collect (cons (car event)
+                               (min (cdr event)
+                                    (with-current-buffer (car event)
+                                        (1+ (buffer-size)))))))
   (setq go-back-future
         (cl-loop for event in go-back-future
                  if (buffer-live-p (car event))
-                 collect event)))
+                 ;; Reduce the position to the size of the buffer
+                 collect (cons (car event)
+                               (min (cdr event)
+                                    (with-current-buffer (car event)
+                                      (1+ (buffer-size))))))))
 
 
 (defun go-back-setup ()
