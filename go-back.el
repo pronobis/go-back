@@ -89,7 +89,7 @@
     (go-back--add-to-hist (current-buffer) p)))
 
 
-(defadvice switch-to-buffer (after go-back--advice-switch-to-buffer (buffer-or-name &optional norecord force-same-window) activate)
+(defadvice switch-to-buffer (before go-back--advice-switch-to-buffer (buffer-or-name &optional norecord force-same-window) activate)
   "Advice capturing switching to a new buffer."
   (when (go-back--check-buffer (current-buffer))
     (go-back--add-to-hist (current-buffer) (point))))
