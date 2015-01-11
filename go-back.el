@@ -54,7 +54,7 @@
 
 
 (defcustom go-back-boring-buffer-regexp-list
-  '("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*Minibuf" "\\*Ibuffer*")
+  '("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*Minibuf" "\\*Ibuffer\\*" "\\*RTags\\*")
   "The regexp list that matches boring buffers."
   :type  '(repeat (choice regexp))
   :group 'go-back)
