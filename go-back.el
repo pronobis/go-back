@@ -160,7 +160,13 @@
 (defun go-back-go-backward ()
   "Move back in history."
   (interactive)
-  (go-back--clean-hist)   ; Clean-up the history first
+  ;; Clean-up the history first
+  (go-back--clean-hist)
+  ;; If there is no future, remember the current position before going back
+  (when (and (= (length go-back-future) 0)
+             (go-back--check-buffer (current-buffer)))
+    (go-back--add-to-hist (current-buffer) (point)))
+  ;; Go-back
   (let* ((last-event (pop go-back-hist))
          (last-buf (car last-event))
          (last-point (cdr last-event)))
