@@ -54,7 +54,7 @@
 
 
 (defcustom go-back-boring-buffer-regexp-list
-  '("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*Minibuf" " \\*Minibuf"
+  '("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*Minibuf"
     "\\*Ibuffer\\*" "\\*RTags\\*" "\\*magit")
   "The regexp list that matches boring buffers."
   :type  '(repeat (choice regexp))
@@ -87,7 +87,8 @@
 (defadvice push-mark (after go-back--advice-push-mark (&optional location nomsg activate) activate)
   "Advice capturing new mark in the 'mark-ring'."
   (let ((p (or location (point))))
-    (go-back--add-to-hist (current-buffer) p)))
+    (when (go-back--check-buffer (current-buffer))
+      (go-back--add-to-hist (current-buffer) p))))
 
 
 (defadvice switch-to-buffer (before go-back--advice-switch-to-buffer (buffer-or-name &optional norecord force-same-window) activate)
